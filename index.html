@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jaagat Prashar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Sticky nav -->
+  <div class="snav" id="snav">
+    <div class="snav-clock">
+      <span data-clock="date"></span>
+      <span data-clock="time"></span>
+    </div>
+    <div class="snav-links">
+      <a href="index.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="reading.html">Reading</a>
+      <a href="writings.html">Writings</a>
+      <a href="beliefs.html">Beliefs</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+
+  <!-- ======= HERO ======= -->
+  <section class="hero" id="hero">
+
+    <canvas id="trees-canvas" aria-hidden="true"></canvas>
+    <span class="hero-credit">inspiration from Nick Cammarata</span>
+
+    <div class="h-top">
+      <div class="h-clock">
+        <span data-clock="date"></span>
+        <span data-clock="time"></span>
+      </div>
+      <nav class="h-nav">
+        <a href="index.html">About</a>
+        <a href="projects.html">Projects</a>
+        <a href="reading.html">Reading</a>
+        <a href="writings.html">Writings</a>
+        <a href="beliefs.html">Beliefs</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+
+    <div class="hero-split">
+
+      <div class="hero-left">
+        <div class="frame-carousel" id="frameCarousel">
+          <div class="frame-slide active">
+            <canvas id="robot-canvas"></canvas>
+            <div class="frame-caption frame-caption--floating">Fun!</div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/buster.jpg" alt="Buster" />
+              <div class="frame-caption">Buster</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/the-swing.png" alt="The Swing, 1767 — Jean-Honoré Fragonard" />
+              <div class="frame-caption">The Swing, 1767<span class="frame-caption-artist">Jean-Honoré Fragonard (1732–1806)</span></div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/school-of-athens.jpg" alt="The School of Athens — Raphael" />
+              <div class="frame-caption">The School of Athens, 1509–1511<span class="frame-caption-artist">Raphael (1483–1520)</span></div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/frida-self-portrait.png" alt="Self-Portrait with Thorn Necklace and Hummingbird — Frida Kahlo" />
+              <div class="frame-caption">Self-Portrait with Thorn Necklace and Hummingbird, 1940<span class="frame-caption-artist">Frida Kahlo (1907–1954)</span></div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/peacock.jpg" alt="Peacock" />
+              <div class="frame-caption">Peacock</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/nieuwe-church-delft.jpg" alt="Nieuwe Church in Delft, Netherlands" />
+              <div class="frame-caption">Nieuwe Church in Delft, Netherlands</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/bird.jpg" alt="Bird" />
+              <div class="frame-caption">Bird</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/sunset.jpg" alt="Sunset" />
+              <div class="frame-caption">Sunset</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/two-cute-birds.jpg" alt="Two Cute Birds" />
+              <div class="frame-caption">Two Cute Birds</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/campus.jpg" alt="Campus" />
+              <div class="frame-caption">Campus</div>
+            </div>
+          </div>
+          <div class="frame-slide">
+            <div class="frame-art">
+              <img src="photos/chickens.jpg" alt="Chickens" />
+              <div class="frame-caption">Chickens</div>
+            </div>
+          </div>
+        </div>
+        <div class="frame-nav">
+          <button class="frame-arrow" id="frameLeft" aria-label="Previous">‹</button>
+          <button class="frame-arrow" id="frameRight" aria-label="Next">›</button>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="bio-card">
+          <div class="bio-header">
+            <img src="photos/profile.jpg" alt="Jaagat Prashar" class="bio-avatar" />
+            <h2 class="bio-heading">Jaagat Prashar</h2>
+          </div>
+          <p class="bio-para">I'm a sophomore studying CS/Math at Stanford. I grew up in India, Azerbaijan, Dubai, and Texas.</p>
+          <p class="bio-para">I value human connection. It's inspired my work across deep learning, autonomy, policy, VC, and healthcare. I enjoy <em>animating the inanimate</em> (Gödel Escher Bach).</p>
+          <p class="bio-para">Previously: Youngest AI intern at General Motors/Cruise (ADAS team), where I trained VLAs for self-driving, and published deep learning for drug discovery research in high school (ACM, BROAD, 3rd at ISEF).</p>
+          <p class="bio-para">Currently: Pursuing research on robotics at Stanford's AI Lab (SAIL), youngest hire at Applied Intuition (AI Research), and co-host of <a href="https://creators.spotify.com/pod/profile/findyourstart3/" target="_blank" rel="noopener" style="color:#B85C3C;text-decoration:none;border-bottom:1px solid rgba(184,92,60,0.5);">STARTS (STEM+Arts) podcast</a> (100K+ views, 49 countries, 50 episodes) & supporting bold ideas at NFX.</p>
+          <p class="bio-para">In my free time, I drink coffee, code, read, go on long walks, talk, shuffle through a diverse playlist ranging from electronic French music to pop, offload the dishwasher, play with my Labrador-Saluki-Akita dog Buster, test my limits at the gym, and cook (metaphorically and literally).</p>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <script src="clock.js"></script>
+  <script src="trees.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>
