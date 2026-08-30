@@ -1121,6 +1121,14 @@ footer span { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
 /* =============================================
    ESSAY EXTRAS (tables, formulas, figures)
    ============================================= */
+
+/* Center the essay column on the page */
+.essay-title,
+.essay-body {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
 .essay-heading {
   font-family: var(--mono);
   font-size: 0.68rem;
