@@ -1149,7 +1149,6 @@ footer span { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
   color: #18181B;
   background: #F8FAFC;
   border: 1px solid rgba(0,0,0,0.07);
-  border-left: 2px solid var(--accent);
   border-radius: 6px;
   padding: 0.85rem 1.1rem;
   max-width: 680px;
@@ -1162,8 +1161,6 @@ footer span { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
   overflow-x: auto;
   max-width: 680px;
   margin: 0.2rem 0 1.35rem;
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 8px;
 }
 
 .essay-table {
@@ -1182,8 +1179,7 @@ footer span { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
   color: #8A919F;
   text-align: left;
   padding: 0.6rem 0.85rem;
-  background: #F8FAFC;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.15);
   white-space: nowrap;
 }
 
@@ -1194,7 +1190,6 @@ footer span { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
   border-bottom: 1px solid rgba(0,0,0,0.05);
   white-space: nowrap;
 }
-.essay-table tr:last-child td { border-bottom: none; }
 .essay-table td:first-child { font-weight: 400; color: #18181B; }
 .essay-table th.num, .essay-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .essay-table td strong { font-weight: 500; color: #18181B; }
