@@ -37,7 +37,7 @@
 
           <p>In this blog, I explore the idea of data-efficient speculative decoding. So, I was outside, going for a walk and as all humans do, I began to think (after drinking a sip of coffee): <em>Can we train a useful speculative-decoding draft model while asking the target model to label only a small part of the training pool?</em> I mean, humans are so efficient. We can learn so quickly. Whether it's learning how to drive or taking those first steps as a baby, we can generalize pretty quickly and also in unseen environments. So, why does it make sense to throw a whole book or the entire Internet at a model and hope it magically becomes superintelligent?</p>
 
-          <h2 class="essay-heading">the setup</h2>
+          <h2 class="essay-heading">The setup</h2>
 
           <p>To define the problem, let's first begin by recalling speculative decoding. The process uses two models. A small draft model proposes future tokens and a larger target model verifies those proposals in parallel. The tokens that are accepted by the target replace separate, serial target model generational steps. The output still follows the target model, but this makes generation faster (and we likey fast)! 🏎️</p>
 
@@ -51,7 +51,7 @@
 
           <p>Our original goal was to use about 10% of the full target-supervision budget while recovering most of the throughput that would be gained by the full-data EAGLE-3.</p>
 
-          <h2 class="essay-heading">measuring data efficiency</h2>
+          <h2 class="essay-heading">Measuring data efficiency</h2>
 
           <p>Now, for the data efficiency metric here, counting examples can be misleading because examples are different since some examples may be different in length. Thus, we measure the target cost in tokens:</p>
 
@@ -95,7 +95,7 @@
   (low-data speculative TPS − low-data AR TPS)
   / (Full100 speculative TPS − Full100 AR TPS)</div>
 
-          <h2 class="essay-heading">specy1: uncertainty per unit of cost</h2>
+          <h2 class="essay-heading">Specy1: uncertainty per unit of cost</h2>
 
           <p>To begin, the original intuition was that most valuable examples would contain transitions where small changes earlier on would have large downstream effects. We speculated (no pun intended) that such examples may teach the draft more than easy or banal examples.</p>
 
@@ -131,7 +131,7 @@
 
           <p>Also, we noticed that under nearly equal token budgets, value-per-token selection (which we compute by ranking each example by how useful it seems divided by how many teacher tokens it would cost) chose 3x as many examples as Random because it favored short rows (i.e., shorter ShareGPT examples with fewer tokens). Thus, it seemed that local uncertainty was not the same as useful coverage of EAGLE-3 training trajectories.</p>
 
-          <h2 class="essay-heading">specy2: coreset matching</h2>
+          <h2 class="essay-heading">Specy2: coreset matching</h2>
 
           <p>This led us to our next step (let's call this thing Specy2). In Specy2, we replaced the difficulty ranking with a coreset objective. I.e., instead of asking which example looked hardest or uncertain, we asked which set of examples best represents the full pool of token transitions (i.e., can we find token transitions that still look representative of the full dataset).</p>
 
@@ -161,7 +161,7 @@
 
           <p>Specy2 improved the TPS by 2.392%, with a 95% interval of [1.437%, 3.687%]. The draft-token acceptance also increased from 15.436% to 15.846%. The effect was nice, but again, we wanted better (we never give up).</p>
 
-          <h2 class="essay-heading">specy3: learning what is learnable</h2>
+          <h2 class="essay-heading">Specy3: learning what is learnable</h2>
 
           <p>So, for this next approach, let's call this Specy3 (if thou have better names, I would happily take suggestions; I was tempted to start calling these Shreky, but that felt a little too OOD).</p>
 
@@ -179,7 +179,7 @@
 
           <p>Specy3 improved repeated TPS by only 2.071% over its paired control. Since we noticed that the draft proposed three tokens per verification but accepted only about 0.52 draft tokens on average, we realized we were spending computation on speculative positions that the target didn't really accept that often. We could do better! I could do better!</p>
 
-          <h2 class="essay-heading">specy4: how far should we speculate?</h2>
+          <h2 class="essay-heading">Specy4: how far should we speculate?</h2>
 
           <p>So, after another long walk, a cup of coffee, etc. I came home and asked myself: For Specy4, if we change no training data and no weights, how many tokens should this low-data checkpoint propose?</p>
 
@@ -208,7 +208,7 @@
 
           <p>Alas, at this point I contemplated all of my progress. But WAIT! I promise there's more:</p>
 
-          <h2 class="essay-heading">supervision changes the optimal horizon</h2>
+          <h2 class="essay-heading">Supervision changes the optimal horizon</h2>
 
           <p>Since the idea of choosing a shorter or adaptive horizon isn't that new, I went for another walk. And after this walk, I arrived at another hypothesis: the amount of target supervision used to train the draft changes its throughput-optimal horizon (i.e., the way we are choosing the data is influencing the maximal horizon).</p>
 
@@ -231,7 +231,7 @@
 
           <p><code>K*</code> is the fastest test horizon for that checkpoint and workload. It seems that target supervision affects more than the average draft accuracy; it can make the draft stay accurate farther into the future. So, we speculate that the training budget and serving policy (how we use the draft model at inference time) should be designed together.</p>
 
-          <h2 class="essay-heading">specy5: weighting training by serving value</h2>
+          <h2 class="essay-heading">Specy5: weighting training by serving value</h2>
 
           <p>So for Specy5, we explore the idea of weight training by serving value.</p>
 
@@ -247,7 +247,7 @@
 
           <p>This run wasn't all that great, but it taught me something: perhaps the strong shallow or early positions weighting from the start prevented the draft from learning a useful multi-token structure? Why was it better suited to <code>K=1</code>, yet not good enough to produce a noice gain?</p>
 
-          <h2 class="essay-heading">specy6: learn the trajectory, then specialize</h2>
+          <h2 class="essay-heading">Specy6: learn the trajectory, then specialize</h2>
 
           <p>So how do we tie this all back together? Last one: Specy6.</p>
 
@@ -293,7 +293,7 @@
 
           <p>The 95% confidence interval here was [5.391%, 8.198%]. We used the same upstream EAGLE-3 architecture and zero additional target supervision; the gains came from extracting more serving value from the data we already labeled!</p>
 
-          <h2 class="essay-heading">the takeaway</h2>
+          <h2 class="essay-heading">The takeaway</h2>
 
           <p>So, the main takeaway here is that when target supervision can be scarce, we can consider first training the draft to learn the whole trajectory (all future speculative positions together and not just the first one). Then we can specialize it briefly for the positions that are valuable at inference, and choose the speculative horizon on separate calibration data.</p>
 
