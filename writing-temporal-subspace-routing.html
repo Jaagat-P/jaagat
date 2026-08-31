@@ -7,6 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}], throwOnError: false});"></script>
   <script src="clock.js" defer></script>
 </head>
 <body class="light-page">
@@ -51,7 +55,7 @@
 
           <p>While the sequence is running, TSR maintains a compact summary of how those earlier events can influence a future loss. When the feedback arrives, it uses that summary instead of revisiting the complete sequence!</p>
 
-          <p>Why is this important? Well, first, data efficiency. Second, it goes back to the idea of a delayed credit problem. Suppose a model observes an important signal and receives the corresponding target 4,096 steps later. The full sequence would contain <code>4,096+1=4,097</code> steps as one step contains the cue and the other 4,096 steps come before the outcome.</p>
+          <p>Why is this important? Well, first, data efficiency. Second, it goes back to the idea of a delayed credit problem. Suppose a model observes an important signal and receives the corresponding target 4,096 steps later. The full sequence would contain \(4{,}096 + 1 = 4{,}097\) steps as one step contains the cue and the other 4,096 steps come before the outcome.</p>
 
           <p>BPTT in this case would build a temporal computation graph during these steps. Once the target arrives, it performs a backward sweep through this graph.</p>
 
@@ -63,31 +67,31 @@
 
           <p>TSR instead tries to compress the relevant temporal influence as the sequence unfolds. Now, what does that even mean and how does this even work?</p>
 
-          <p>Let <code>h_t</code> be the hidden state of a recurrent model. The local Jacobian is</p>
+          <p>Let \(h_t\) be the hidden state of a recurrent model. The local Jacobian is</p>
 
-          <div class="essay-formula">J_t = ∂h_t / ∂h_{t−1}</div>
+          <div class="essay-math">\[ J_t = \frac{\partial h_t}{\partial h_{t-1}} \]</div>
 
           <p>This describes how the previous hidden state affects the current one.</p>
 
           <p>A product of these Jacobians, thus, describes how an old state can affect a state much later in the sequence (this product can be big, but in our experiments, we observe that this long range influence often becomes concentrated in a small number of directions after the model learns a stable memory strategy).</p>
 
-          <p>The forward TSR method tracks a rank-<code>r</code> basis <code>U_t</code> for those directions:</p>
+          <p>The forward TSR method tracks a rank-\(r\) basis \(U_t\) for those directions:</p>
 
-          <div class="essay-formula">J_t U_{t−1} = U_t R_t</div>
+          <div class="essay-math">\[ J_t U_{t-1} = U_t R_t \]</div>
 
-          <p>The matrix <code>R_t</code> describes how the tracked subspace changes from one step to the next one.</p>
+          <p>The matrix \(R_t\) describes how the tracked subspace changes from one step to the next one.</p>
 
           <p>We also simultaneously maintain a compressed parameter-eligibility trace:</p>
 
-          <div class="essay-formula">S_t = R_t S_{t−1} + U_tᵀ L_t</div>
+          <div class="essay-math">\[ S_t = R_t S_{t-1} + U_t^\top L_t \]</div>
 
-          <p>where <code>L_t</code> represents the local effect of the model's parameters on the hidden state. The trace is target free (i.e., it is constructed before the model knows the future reward) and records how earlier parameter changes could affect a later hidden state.</p>
+          <p>where \(L_t\) represents the local effect of the model's parameters on the hidden state. The trace is target free (i.e., it is constructed before the model knows the future reward) and records how earlier parameter changes could affect a later hidden state.</p>
 
           <p>Once this outcome does arrive, TSR combines the terminal error (the terminal error is the error signal you get at the end of the sequence once the target/reward finally arrives) with the trace:</p>
 
-          <div class="essay-formula">∇_θ L ≈ (g_Tᵀ U_T) S_T</div>
+          <div class="essay-math">\[ \widehat{\nabla_\theta L} \approx (g_T^\top U_T)\, S_T \]</div>
 
-          <p>where <code>g_T</code> is the final loss gradient with respect to the terminal hidden state.</p>
+          <p>where \(g_T\) is the final loss gradient with respect to the terminal hidden state.</p>
 
           <p>This then produces a long range gradient estimate without having to run backward through the entire sequence.</p>
 
@@ -127,7 +131,7 @@
 
           <p>A natural question to also ask here is if rank follows the amount of remembered information? A small output space can make terminal gradients look low-rank for trivial reasons, so we built a more controlled experiment.</p>
 
-          <p>Here, the model had to remember <code>K</code> independent continuous values through a delay and reproduce all of them at the end. All of the configurations reached held-out R² above 0.9992.</p>
+          <p>Here, the model had to remember \(K\) independent continuous values through a delay and reproduce all of them at the end. All of the configurations reached held-out \(R^2\) above 0.9992.</p>
 
           <p>The measured credit rank was then:</p>
 
@@ -234,7 +238,7 @@
 
           <p>Vroom vroom. The next step was to make TSR faster! We ran some profiling and showed that most of the runtime actually came from repeatedly transporting a large eligibility tensor:</p>
 
-          <div class="essay-formula">S ← RS</div>
+          <div class="essay-math">\[ S \leftarrow RS \]</div>
 
           <p>REEE(call) that this eligibility tensor is just a big running data thingy that stores how each parameter's earlier effect could still influence the current hidden state.</p>
 
@@ -246,9 +250,9 @@
 
           <p><strong>Chunked scans:</strong> we no longer change the full eligibility tensor at every step, but now accumulate local contributions and contract them once per fixed chunk. On the continuous-memory benchmark, this reduced runtime from about 52s to 21s without changing 3 seed accuracy! I.e., we don't update the huge eligibility tensor every single timestep, but rather accumulate changes and update it once per chunky chunk.</p>
 
-          <p><strong>Less frequent basis refreshes:</strong> We don't enforce a complete QR factorization at every step and instead use cheaper normalization between periodic full basis refreshes. I.e., we don't do that expensive re-orthogonalization of the credit directions at every step (only occasionally now). This QR factorization was used to keep the tracked basis <code>U_t</code> well behaved (i.e., orthogonal here).</p>
+          <p><strong>Less frequent basis refreshes:</strong> We don't enforce a complete QR factorization at every step and instead use cheaper normalization between periodic full basis refreshes. I.e., we don't do that expensive re-orthogonalization of the credit directions at every step (only occasionally now). This QR factorization was used to keep the tracked basis \(U_t\) well behaved (i.e., orthogonal here).</p>
 
-          <p><strong>Recent window:</strong> At rank 8, adding an exact 16-step BPTT window raised the mean R² from approximately 0.834 to 0.949. Furthermore, at rank 24, the best hybrid TSR configuration reached R² = 0.9898 (compared with 0.9939 for BPTT). I.e., we use the normal exact BPTT for the last 16 steps where the credit is more complicated (this improved accuracy).</p>
+          <p><strong>Recent window:</strong> At rank 8, adding an exact 16-step BPTT window raised the mean \(R^2\) from approximately 0.834 to 0.949. Furthermore, at rank 24, the best hybrid TSR configuration reached \(R^2\) = 0.9898 (compared with 0.9939 for BPTT). I.e., we use the normal exact BPTT for the last 16 steps where the credit is more complicated (this improved accuracy).</p>
 
           <p><strong>Boundary reuse:</strong> The hybrid implementation originally replayed an old prefix to reconstruct the state at the beginning of its exact window. We reused the state already computed during the TSR pass. I.e., TSR had already gotten the hidden state to start the final 16-step BPTT window, so instead of just replaying the earlier sequence to get that state, we save it.</p>
 
@@ -292,7 +296,7 @@
           <div class="essay-table-wrap">
             <table class="essay-table">
               <thead>
-                <tr><th>Method</th><th class="num">Mean R²</th></tr>
+                <tr><th>Method</th><th class="num">Mean \(R^2\)</th></tr>
               </thead>
               <tbody>
                 <tr><td>Hybrid TSR</td><td class="num">0.535</td></tr>
@@ -307,7 +311,7 @@
 
           <p>But hey, we never give up! So, I went for another long walk, and…back to work:</p>
 
-          <p>On the same continuous memory family at 4,097 steps, TBPTT (truncated) 16 reached approximately −0.002 R², while BPTT reached 0.448. TBPTT was cheap because it discarded the distant dependency.</p>
+          <p>On the same continuous memory family at 4,097 steps, TBPTT (truncated) 16 reached approximately −0.002 \(R^2\), while BPTT reached 0.448. TBPTT was cheap because it discarded the distant dependency.</p>
 
           <h2 class="essay-heading">MiniGrid: delayed decisions</h2>
 
