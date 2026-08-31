@@ -73,7 +73,7 @@
 
           <p>We begin by testing a cheaper alternative called detached local training. Before one block's output enters the next block, the implementation would call <code>detach()</code> and the activation would still travel forward normally, but the gradients can't cross that specific boundary.</p>
 
-          <div class="essay-formula">block 1 → stop gradient → block 2 → stop gradient → block 3</div>
+          <div class="essay-formula">I.e., block 1 → stop gradient → block 2 → stop gradient → block 3</div>
 
           <p>In detached local training, we attach the language-model output head directly to every block (each block receives its own local next-token loss):</p>
 
@@ -272,9 +272,9 @@ H − εu → later blocks → loss−</div>
                 <tr><th class="num">Passes over the pool</th><th>Outcome</th></tr>
               </thead>
               <tbody>
-                <tr><td class="num">≈1.35</td><td>The uniform approach wins</td></tr>
+                <tr><td class="num">1.35</td><td>The uniform approach wins</td></tr>
                 <tr><td class="num">≈2–4.6</td><td>The comparison converged towards the counterfactual selection method</td></tr>
-                <tr><td class="num">≈9–18</td><td>The selection approach won significantly</td></tr>
+                <tr><td class="num">9–18</td><td>The selection approach won significantly</td></tr>
               </tbody>
             </table>
           </div>
