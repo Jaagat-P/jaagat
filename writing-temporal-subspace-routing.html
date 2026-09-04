@@ -39,6 +39,8 @@
 
         <div class="essay-body" style="margin-top: 1.6rem;">
 
+          <p><em>Note: This post is a work in progress — I'll be adding plots and more content soon.</em></p>
+
           <p>In this blog, we explore the idea of learning from delayed feedback without storing the whole past. I.e., <em>when feedback arrives late, does a recurrent model really need to store and revisit its entire history to learn from it?</em></p>
 
           <p>The standard method here, backpropagation through time (BPTT), does that. It stores the computation performed at every step and, once the target or reward arrives, it follows the computation backward to determine which of those events mattered.</p>
